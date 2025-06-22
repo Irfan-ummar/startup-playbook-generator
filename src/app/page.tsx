@@ -223,16 +223,16 @@ Tailor the playbook specifically for a ${data.stage} stage ${data.industry} star
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('https://agent-prod.studio.lyzr.ai/v3/inference/chat/', {
+      const response = await fetch(process.env.NEXT_PUBLIC_LYZR_API_URL!, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': 'sk-default-Aw9bJ0EgKiWCzITF9rqyGYMsgE0p2zck'
+          'x-api-key': process.env.NEXT_PUBLIC_LYZR_API_KEY!
         },
         body: JSON.stringify({
-          user_id: "irfanwork414@gmail.com",
-          agent_id: "6857c5a017bfa0b3af0f3c2f",
-          session_id: "6857c5a017bfa0b3af0f3c2f-mwfxntb46nb",
+          user_id: process.env.NEXT_PUBLIC_LYZR_USER_ID!,
+          agent_id: process.env.NEXT_PUBLIC_LYZR_AGENT_ID!,
+          session_id: process.env.NEXT_PUBLIC_LYZR_SESSION_ID!,
           message: prompt
         })
       });
