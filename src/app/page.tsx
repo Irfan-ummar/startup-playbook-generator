@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import jsPDF from 'jspdf';
 
@@ -176,22 +176,6 @@ export default function Home() {
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Load cached results on component mount
-  useEffect(() => {
-    const cached = localStorage.getItem('startup-playbook-cache');
-    if (cached) {
-      try {
-        const { timestamp } = JSON.parse(cached);
-        // Cache expires after 1 hour
-        if (Date.now() - timestamp < 3600000) {
-          console.log('Found cached playbook data');
-        }
-      } catch {
-        console.log('No valid cache found');
-      }
-    }
-  }, []);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
@@ -266,13 +250,6 @@ Tailor the playbook specifically for a ${data.stage} stage ${data.industry} star
       // Extract the actual response text (adjust based on actual API response structure)
       const playbookContent = data.response || data.message || data.content || JSON.stringify(data);
       
-      // Cache the result
-      localStorage.setItem('startup-playbook-cache', JSON.stringify({
-        data: playbookContent,
-        timestamp: Date.now(),
-        formData: formData
-      }));
-
       setResult(playbookContent);
       return playbookContent;
 
@@ -297,7 +274,7 @@ Tailor the playbook specifically for a ${data.stage} stage ${data.industry} star
       return;
     }
 
-    // Build the prompt
+    // Build fresh prompt from current form data
     const prompt = buildPrompt(formData);
     
     console.log('=== GENERATED PROMPT ===');
